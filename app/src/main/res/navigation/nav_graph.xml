@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/BalanceFragment">
+
+    <fragment
+        android:id="@+id/BalanceFragment"
+        android:name="eu.pcosta.ethereumwallet.ui.balance.BalanceFragment"
+        tools:layout="@layout/balance_fragment">
+
+        <action
+            android:id="@+id/action_BalanceFragment_to_SearchFragment"
+            app:destination="@id/SearchFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/SearchFragment"
+        android:name="eu.pcosta.ethereumwallet.ui.search.SearchFragment"
+        tools:layout="@layout/search_fragment" />
+
+</navigation>
