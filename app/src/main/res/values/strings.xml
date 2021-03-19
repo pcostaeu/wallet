@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Wallet</string>
+
+    <string name="eth_amount_placeholder">%s ETH</string>
+    <string name="eth_value_placeholder">$%s / €%s</string>
+    <string name="token_label_placeholder">%s (%s):</string>
+    <string name="last_update_placeholder">Last Updated: %s</string>
+
+    <string name="tokens_search">Tokens Search</string>
+    <string name="token_balance">Token Balance</string>
+    <string name="search_hint">Search…</string>
+    <string name="address">Address</string>
+    <string name="eth_balance">ETH Balance</string>
+
+    <string name="error_generic_message">An error occurred fetching your balance</string>
+    <string name="error_internet_message">Internet connection disabled</string>
+</resources>
