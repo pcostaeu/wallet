@@ -25,9 +25,11 @@ android {
         versionName "1.0"
 
         // Keys
-        buildConfigField "String", "ETH_ACCOUNT", '"{ETH_ACCOUNT}"'
-        buildConfigField "String", "ETHERSCAN_API_KEY", '"{ETHERSCAN_API_KEY}"'
-        buildConfigField "String", "ETHPLORER_API_KEY", '"freekey"'
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file('keys.properties').newDataInputStream())
+        buildConfigField "String", "ETH_ACCOUNT", "${properties.getProperty('ETH_ACCOUNT')}"
+        buildConfigField "String", "ETHERSCAN_API_KEY", "${properties.getProperty('ETHERSCAN_API_KEY')}"
+        buildConfigField "String", "ETHPLORER_API_KEY", "${properties.getProperty('ETHPLORER_API_KEY')}"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -103,6 +105,7 @@ dependencies {
     // Unit Testing
     testImplementation 'junit:junit:4.13.2'
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
+    //noinspection GradleDependency. Kluent removes support on mockito above 1.64
     testImplementation 'org.amshove.kluent:kluent-android:1.64'
 
     // UI Testing
