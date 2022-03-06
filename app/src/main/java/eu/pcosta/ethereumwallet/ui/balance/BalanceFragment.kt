@@ -31,10 +31,10 @@ class BalanceFragment : BaseFragment(R.layout.balance_fragment) {
             addressValue.text = BuildConfig.ETH_ACCOUNT
             addressContainer.setOnClickListener {
                 val clipboard: ClipboardManager = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText("Account Address", BuildConfig.ETH_ACCOUNT)
+                val clip = ClipData.newPlainText(getString(R.string.account_address), BuildConfig.ETH_ACCOUNT)
                 clipboard.setPrimaryClip(clip)
 
-                Toast.makeText(requireContext(), "Copied to clipboard", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.copied_clipboard), Toast.LENGTH_SHORT).show()
             }
 
             tokensSearchBtn.setOnClickListener {

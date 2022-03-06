@@ -14,4 +14,7 @@
 
     <string name="error_generic_message">An error occurred fetching your balance</string>
     <string name="error_internet_message">Internet connection disabled</string>
+
+    <string name="account_address">Account Address</string>
+    <string name="copied_clipboard">Copied to clipboard</string>
 </resources>

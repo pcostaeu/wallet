@@ -1,4 +1,4 @@
-package eu.pcosta.ethereumwallet.network
+package eu.pcosta.ethereumwallet.domain
 
 import android.content.Context
 import android.net.ConnectivityManager

@@ -9,6 +9,7 @@ import com.adevinta.android.barista.assertion.BaristaVisibilityAssertions.assert
 import com.adevinta.android.barista.assertion.BaristaVisibilityAssertions.assertNotDisplayed
 import com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn
 import com.adevinta.android.barista.interaction.BaristaEditTextInteractions.writeTo
+import com.adevinta.android.barista.rule.flaky.AllowFlaky
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,6 +24,7 @@ class SearchTest {
     val activityRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Test
+    @AllowFlaky(attempts = 3)
     fun testSearchScreen() {
         assertDisplayed(R.id.tokens_search_btn)
         clickOn(R.id.tokens_search_btn)
@@ -31,35 +33,35 @@ class SearchTest {
         assertDisplayed(R.id.empty_state)
         assertRecyclerViewItemCount(R.id.recycler_view, 0)
 
-        // Search for USDT
-        writeTo(R.id.search_view, "USDT")
-        sleep(1000)
+        // Search for BUSD
+        writeTo(R.id.search_view, "BUSD")
+        sleep(2000)
 
         // We should have one row, empty state gone
         assertNotDisplayed(R.id.empty_state)
         assertRecyclerViewItemCount(R.id.recycler_view, 1)
-        assertDisplayedAtPosition(R.id.recycler_view, 0, R.id.token_name, "Tether USD (USDT):")
+        assertDisplayedAtPosition(R.id.recycler_view, 0, R.id.token_name, "Binance USD (BUSD):")
 
         // Invalid search
-        writeTo(R.id.search_view, "USDTT")
-        sleep(1000)
+        writeTo(R.id.search_view, "BUSDD")
+        sleep(2000)
 
         // We should have empty state visible
         assertDisplayed(R.id.empty_state)
         assertRecyclerViewItemCount(R.id.recycler_view, 0)
 
-        // Search for USDT
-        writeTo(R.id.search_view, "USDT")
-        sleep(1000)
+        // Search for BUSD
+        writeTo(R.id.search_view, "BUSD")
+        sleep(2000)
 
         // We should have one row, empty state gone
         assertNotDisplayed(R.id.empty_state)
         assertRecyclerViewItemCount(R.id.recycler_view, 1)
-        assertDisplayedAtPosition(R.id.recycler_view, 0, R.id.token_name, "Tether USD (USDT):")
+        assertDisplayedAtPosition(R.id.recycler_view, 0, R.id.token_name, "Binance USD (BUSD):")
 
         // Clear text
         writeTo(R.id.search_view, "")
-        sleep(1000)
+        sleep(2000)
 
         // We should have empty state visible
         assertDisplayed(R.id.empty_state)

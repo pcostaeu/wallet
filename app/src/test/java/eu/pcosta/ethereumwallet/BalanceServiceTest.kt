@@ -1,23 +1,34 @@
 package eu.pcosta.ethereumwallet
 
-import com.nhaarman.mockitokotlin2.*
 import eu.pcosta.ethereumwallet.database.TokenRoomEntry
 import eu.pcosta.ethereumwallet.database.TokensDatabase
-import eu.pcosta.ethereumwallet.network.*
-import eu.pcosta.ethereumwallet.repository.BalanceRepositoryImpl
+import eu.pcosta.ethereumwallet.domain.BalanceServiceImpl
+import eu.pcosta.ethereumwallet.domain.ConnectivityService
+import eu.pcosta.ethereumwallet.network.Balance
+import eu.pcosta.ethereumwallet.network.Price
+import eu.pcosta.ethereumwallet.network.Token
+import eu.pcosta.ethereumwallet.repository.CoinGeckoRepository
+import eu.pcosta.ethereumwallet.repository.EtherscanRepository
+import eu.pcosta.ethereumwallet.repository.EthplorerRepository
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import org.amshove.kluent.any
 import org.amshove.kluent.itReturns
 import org.amshove.kluent.shouldBeEqualTo
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.doNothing
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.timeout
+import org.mockito.kotlin.whenever
 import java.math.BigDecimal
 
 
-class BalanceRepositoryTest {
+class BalanceServiceTest {
 
     private val tokenRoomEntry = TokenRoomEntry(
         id = "USDT",
@@ -34,10 +45,10 @@ class BalanceRepositoryTest {
     )
 
     private val tokenBalance = Balance("1000000", "", "")
-
     private val etherBalance = Balance("100000000", "", "")
 
     private val timeout = timeout(1000)
+    private lateinit var mocks: AutoCloseable
 
     @Mock
     private lateinit var tokensDao: TokensDatabase.TokensDao
@@ -46,33 +57,45 @@ class BalanceRepositoryTest {
     private lateinit var connectivityService: ConnectivityService
 
     @Mock
-    private lateinit var coinGeckoApiService: CoinGeckoApiService
+    private lateinit var coinGeckoRepository: CoinGeckoRepository
 
     @Mock
-    private lateinit var etherscanApiService: EtherscanApiService
+    private lateinit var etherscanRepository: EtherscanRepository
 
     @Mock
-    private lateinit var ethplorerApiService: EthplorerApiService
+    private lateinit var ethplorerRepository: EthplorerRepository
 
     private fun buildService() =
-        BalanceRepositoryImpl(connectivityService, ethplorerApiService, tokensDao, coinGeckoApiService, etherscanApiService)
+        BalanceServiceImpl(
+            connectivityService,
+            ethplorerRepository,
+            tokensDao,
+            coinGeckoRepository,
+            etherscanRepository
+        )
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
+        mocks = MockitoAnnotations.openMocks(this)
 
         whenever(connectivityService.observeIsConnectedToInternet()) itReturns Flowable.just(true)
-        whenever(coinGeckoApiService.getEtherPrice()) itReturns Single.just(Price(BigDecimal("1"), BigDecimal("1.15")))
-        whenever(ethplorerApiService.getTopTokens()) itReturns Single.just(listOf(tokenNetwork))
+        whenever(coinGeckoRepository.getEtherPrice()) itReturns Single.just(Price(BigDecimal("1"), BigDecimal("1.15")))
+        whenever(ethplorerRepository.getTopTokens()) itReturns Single.just(listOf(tokenNetwork))
 
-        whenever(etherscanApiService.getBalance()) itReturns Single.just(etherBalance)
-        whenever(etherscanApiService.getTokenBalance(any())) itReturns Single.just(tokenBalance)
+        whenever(etherscanRepository.getBalance()) itReturns Single.just(etherBalance)
+        whenever(etherscanRepository.getTokenBalance(any())) itReturns Single.just(tokenBalance)
 
         doNothing().whenever(tokensDao).clear()
         doNothing().whenever(tokensDao).insert(any())
         whenever(tokensDao.count()) itReturns Single.just(1)
         whenever(tokensDao.search(any())) itReturns Single.just(listOf(tokenRoomEntry))
     }
+
+    @After
+    fun tearDown() {
+        mocks.close()
+    }
+
 
     @Test
     fun testInit() {
@@ -93,8 +116,8 @@ class BalanceRepositoryTest {
         balance.price!!.eur shouldBeEqualTo BigDecimal("1")
         balance.price!!.usd shouldBeEqualTo BigDecimal("1.15")
 
-        verify(etherscanApiService, timeout).getBalance()
-        verify(coinGeckoApiService, timeout).getEtherPrice()
+        verify(etherscanRepository, timeout).getBalance()
+        verify(coinGeckoRepository, timeout).getEtherPrice()
     }
 
     @Test
@@ -107,7 +130,7 @@ class BalanceRepositoryTest {
         balance[0].name shouldBeEqualTo "Tether USD"
         balance[0].amount shouldBeEqualTo BigDecimal("1")
 
-        verify(tokensDao, timeout).search(eq("USD%"))
-        verify(etherscanApiService, timeout).getTokenBalance(eq("0x00"))
+        verify(tokensDao, timeout).search(eq("%USD%"))
+        verify(etherscanRepository, timeout).getTokenBalance(eq("0x00"))
     }
 }

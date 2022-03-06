@@ -1,10 +1,12 @@
-package eu.pcosta.ethereumwallet.repository
+package eu.pcosta.ethereumwallet.domain
 
-import android.util.Log
 import eu.pcosta.ethereumwallet.database.TokenRoomEntry
 import eu.pcosta.ethereumwallet.database.TokensDatabase
-import eu.pcosta.ethereumwallet.domain.*
-import eu.pcosta.ethereumwallet.network.*
+import eu.pcosta.ethereumwallet.domain.models.*
+import eu.pcosta.ethereumwallet.network.Token
+import eu.pcosta.ethereumwallet.repository.CoinGeckoRepository
+import eu.pcosta.ethereumwallet.repository.EtherscanRepository
+import eu.pcosta.ethereumwallet.repository.EthplorerRepository
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.Flowables.combineLatest
@@ -18,7 +20,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Balance repository. Allows to fetch the amount of tokens the hardcoded client address has
  */
-interface BalanceRepository {
+interface BalanceService {
 
     /**
      * Merges the data from Coin Gecko with Etherscan to get Ether balance and respective value
@@ -34,13 +36,13 @@ interface BalanceRepository {
     fun searchTokens(query: String): Single<List<TokenBalance>>
 }
 
-class BalanceRepositoryImpl(
+class BalanceServiceImpl(
     connectivityService: ConnectivityService,
-    ethplorerApiService: EthplorerApiService,
+    ethplorerRepository: EthplorerRepository,
     private val tokensDatabaseDao: TokensDatabase.TokensDao,
-    private val coinGeckoApiService: CoinGeckoApiService,
-    private val etherscanApiService: EtherscanApiService
-) : BalanceRepository {
+    private val coinGeckoRepository: CoinGeckoRepository,
+    private val etherscanRepository: EtherscanRepository
+) : BalanceService {
 
     private val readyFlag = BehaviorProcessor.create<Boolean>()
 
@@ -55,7 +57,7 @@ class BalanceRepositoryImpl(
         connectivityService.observeIsConnectedToInternet()
             .filter { it }
             .firstElement()
-            .flatMapSingle { ethplorerApiService.getTopTokens() }
+            .flatMapSingle { ethplorerRepository.getTopTokens() }
             .subscribeOn(Schedulers.io())
             .doOnSuccess { tokens ->
                 tokensDatabaseDao.clear()
@@ -70,12 +72,12 @@ class BalanceRepositoryImpl(
         return combineLatest(
             Flowable.interval(0, 60, TimeUnit.SECONDS)
                 .switchMapSingle {
-                    etherscanApiService.getBalance().toOptional()
+                    etherscanRepository.getBalance().toOptional()
                 }
                 .onErrorReturnItem(Optional()),
             Flowable.interval(0, 15, TimeUnit.SECONDS)
                 .switchMapSingle {
-                    coinGeckoApiService.getEtherPrice().toOptional()
+                    coinGeckoRepository.getEtherPrice().toOptional()
                 }
                 .onErrorReturnItem(Optional())
         )
@@ -96,11 +98,11 @@ class BalanceRepositoryImpl(
         return readyFlag.filter { it }
             .firstOrError()
             .timeout(5, TimeUnit.SECONDS)
-            .flatMap { tokensDatabaseDao.search("$query%") }
+            .flatMap { tokensDatabaseDao.search("%$query%") }
             .flatMapPublisher { tokenList ->
                 tokenList.toFlowable()
                     .flatMapSingle { token ->
-                        etherscanApiService.getTokenBalance(token.address)
+                        etherscanRepository.getTokenBalance(token.address)
                             .map { balance ->
                                 TokenBalance(
                                     id = token.id,
@@ -123,5 +125,6 @@ class BalanceRepositoryImpl(
     /**
      * Fix the amount of a token with the correct decimal number
      */
-    private fun String.fixUnit(decimals: Int): BigDecimal = BigDecimal(this).divide(BigDecimal.valueOf(10).pow(decimals))
+    private fun String.fixUnit(decimals: Int): BigDecimal =
+        BigDecimal(this).divide(BigDecimal.valueOf(10).pow(decimals))
 }

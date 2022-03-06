@@ -2,9 +2,9 @@ package eu.pcosta.ethereumwallet.ui.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import eu.pcosta.ethereumwallet.domain.TokenBalance
-import eu.pcosta.ethereumwallet.network.ConnectivityService
-import eu.pcosta.ethereumwallet.repository.BalanceRepository
+import eu.pcosta.ethereumwallet.domain.models.TokenBalance
+import eu.pcosta.ethereumwallet.domain.ConnectivityService
+import eu.pcosta.ethereumwallet.domain.BalanceService
 import eu.pcosta.ethereumwallet.ui.base.BaseViewModel
 import eu.pcosta.ethereumwallet.ui.base.Response
 import eu.pcosta.ethereumwallet.ui.base.Status
@@ -14,7 +14,7 @@ import java.util.*
 
 class SearchViewModel(
     connectivityService: ConnectivityService,
-    balanceRepository: BalanceRepository
+    balanceService: BalanceService
 ) : BaseViewModel() {
 
     private val balance = MutableLiveData<Response<List<TokenBalance>>>()
@@ -27,7 +27,7 @@ class SearchViewModel(
                 balance.postValue(Response(status = Status.LOADING))
             }
             .switchMapSingle { query ->
-                balanceRepository.searchTokens(query)
+                balanceService.searchTokens(query)
                     .map {
                         Response(
                             timestamp = Date().time,

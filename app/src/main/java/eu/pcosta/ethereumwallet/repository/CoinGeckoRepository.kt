@@ -1,29 +1,20 @@
-package eu.pcosta.ethereumwallet.network
+package eu.pcosta.ethereumwallet.repository
 
 import android.content.Context
-import com.squareup.moshi.*
+import com.squareup.moshi.FromJson
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.ToJson
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import eu.pcosta.ethereumwallet.network.CoinValueApi
+import eu.pcosta.ethereumwallet.network.Price
 import io.reactivex.rxjava3.core.Single
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Query
 import java.math.BigDecimal
 
-
-@JsonClass(generateAdapter = true)
-data class Price(
-    @field:Json(name = "eur") val eur: BigDecimal,
-    @field:Json(name = "usd") val usd: BigDecimal
-)
-
-@JsonClass(generateAdapter = true)
-data class Prices(
-    @field:Json(name = "ethereum") val ethereum: Price
-)
 
 object BigDecimalAdapter {
     @FromJson
@@ -37,32 +28,16 @@ enum class Currency(val id: String) {
     EUR("eur"), USD("usd");
 }
 
-interface CoinValueApi {
-
-    /**
-     * Get coin prices
-     *
-     * @param ids Coin Ids, separated by comma
-     * @param currencies Currencies Ids, separated by comma
-     */
-    @GET("simple/price")
-    fun getCoinsPrice(
-        @Query("ids") ids: String,
-        @Query("vs_currencies") currencies: String
-    ): Single<Prices>
-
-}
-
-interface CoinGeckoApiService {
+interface CoinGeckoRepository {
     /**
      * Fetch the current ether price
      */
     fun getEtherPrice(): Single<Price>
 }
 
-class CoinGeckoApiServiceImpl(
+class CoinGeckoRepositoryImpl(
     private val context: Context
-) : CoinGeckoApiService {
+) : CoinGeckoRepository {
 
     /**
      * CoinGecko specifies a 30 second cache so OkHttpClient has a small amount to space to cache the data

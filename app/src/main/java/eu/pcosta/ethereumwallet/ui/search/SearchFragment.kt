@@ -55,7 +55,7 @@ class SearchFragment : BaseFragment(R.layout.search_fragment) {
                     Status.OK -> {
                         progressIndicator.visibility = View.INVISIBLE
                         updateAnimation(
-                            response?.data?.isNullOrEmpty()!!,
+                            response.data.isNullOrEmpty(),
                             EmptyStateAnimation.SEARCH_NO_RESULTS
                         )
 
@@ -81,20 +81,21 @@ class SearchFragment : BaseFragment(R.layout.search_fragment) {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
         binding.searchView.showKeyboard()
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onPause() {
+        super.onPause()
         binding.searchView.hideKeyboard()
     }
 
     private fun View.showKeyboard() {
-        requestFocus()
-        (requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).apply {
-            toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
+        if (requestFocus()) {
+            (requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).apply {
+                showSoftInput(this@showKeyboard, InputMethodManager.SHOW_IMPLICIT)
+            }
         }
     }
 

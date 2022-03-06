@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import eu.pcosta.ethereumwallet.R
 import eu.pcosta.ethereumwallet.databinding.TokenBalanceItemBinding
-import eu.pcosta.ethereumwallet.domain.TokenBalance
+import eu.pcosta.ethereumwallet.domain.models.TokenBalance
 import java.math.BigDecimal
 
 class TokenAdapter : ListAdapter<TokenBalance, TokenBalanceViewHolder>(TokenBalanceDiffCallback) {

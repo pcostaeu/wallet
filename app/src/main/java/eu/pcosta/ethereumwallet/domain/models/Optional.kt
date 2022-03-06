@@ -1,4 +1,4 @@
-package eu.pcosta.ethereumwallet.domain
+package eu.pcosta.ethereumwallet.domain.models
 
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single

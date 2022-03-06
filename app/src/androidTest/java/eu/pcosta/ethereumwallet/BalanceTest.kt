@@ -12,6 +12,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.lang.Thread.sleep
 
+
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 class BalanceTest {
@@ -34,7 +35,7 @@ class BalanceTest {
         assertNotDisplayed(R.id.balance_error_update)
 
         // Wait for balance reply
-        sleep(1000)
+        sleep(2000)
 
         // Check that views are now visible
         assertNotDisplayed(R.id.progress_indicator)
