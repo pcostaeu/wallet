@@ -12,11 +12,7 @@
 
         <action
             android:id="@+id/action_BalanceFragment_to_SearchFragment"
-            app:destination="@id/SearchFragment"
-            app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_fade_exit"
-            app:popEnterAnim="@anim/fragment_fade_enter"
-            app:popExitAnim="@anim/fragment_fade_exit" />
+            app:destination="@id/SearchFragment" />
 
     </fragment>
 
