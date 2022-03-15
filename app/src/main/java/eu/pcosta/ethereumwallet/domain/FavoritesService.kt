@@ -49,7 +49,7 @@ class FavoritesServiceImpl(
 
     override fun removeFavorite(favorite: Favorite): Completable {
         return Completable.fromCallable {
-            favoritesDao.insert(favorite.toRoomEntry())
+            favoritesDao.delete(favorite.toRoomEntry())
         }
     }
 

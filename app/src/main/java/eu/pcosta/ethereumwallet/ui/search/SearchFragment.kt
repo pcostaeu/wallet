@@ -2,7 +2,6 @@ package eu.pcosta.ethereumwallet.ui.search
 
 import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.navigation.fragment.findNavController
@@ -11,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding4.widget.queryTextChanges
 import eu.pcosta.ethereumwallet.R
 import eu.pcosta.ethereumwallet.databinding.SearchFragmentBinding
+import eu.pcosta.ethereumwallet.domain.models.Favorite
+import eu.pcosta.ethereumwallet.domain.models.TokenBalance
 import eu.pcosta.ethereumwallet.ui.base.BaseFragment
 import eu.pcosta.ethereumwallet.ui.base.Status
 import eu.pcosta.ethereumwallet.ui.base.viewBinding
@@ -40,9 +41,7 @@ class SearchFragment : BaseFragment(R.layout.search_fragment) {
         with(binding) {
             NavigationUI.setupWithNavController(toolbar, findNavController())
 
-            val adapter = TokenAdapter { token, isFavorite ->
-                Log.d("TokenAdapter", "$token, $isFavorite")
-            }
+            val adapter = TokenAdapter(::addRemoveFavorite)
 
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
             recyclerView.setHasFixedSize(true)
@@ -86,6 +85,12 @@ class SearchFragment : BaseFragment(R.layout.search_fragment) {
                 }
                 .bind()
         }
+    }
+
+    private fun addRemoveFavorite(token: TokenBalance, favorite: Favorite?) {
+        favorite?.let {
+            searchViewModel.removeFavorite(it)
+        } ?: searchViewModel.addFavorite(token)
     }
 
     override fun onResume() {
