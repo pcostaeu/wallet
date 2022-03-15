@@ -49,7 +49,7 @@ class BalanceViewModel(
             .map {
                 Response(
                     status = Status.OK,
-                    data = it
+                    data = it.sortedBy { it.name }
                 )
             }
             .startWithItem(Response(status = Status.LOADING))
