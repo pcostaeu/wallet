@@ -17,6 +17,10 @@
 
     <string name="account_address">Account Address</string>
     <string name="copied_clipboard">Copied to clipboard</string>
+
+    <string name="favorites">Favorites</string>
+    <string name="favorite_label_placeholder">%s (%s)</string>
+    <string name="favorites_empty_error">No favorites. Add some in Tokens Search</string>
     <string name="favorite_delete_title">Delete favorite</string>
     <string name="favorite_delete_msg">Are you sure you want to delete %s?</string>
 </resources>

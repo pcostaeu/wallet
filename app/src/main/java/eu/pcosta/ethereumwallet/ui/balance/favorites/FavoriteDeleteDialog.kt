@@ -1,4 +1,4 @@
-package eu.pcosta.ethereumwallet.ui.favorites
+package eu.pcosta.ethereumwallet.ui.balance.favorites
 
 import android.content.Context
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

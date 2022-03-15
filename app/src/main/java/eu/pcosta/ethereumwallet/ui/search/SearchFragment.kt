@@ -15,7 +15,7 @@ import eu.pcosta.ethereumwallet.domain.models.TokenBalance
 import eu.pcosta.ethereumwallet.ui.base.BaseFragment
 import eu.pcosta.ethereumwallet.ui.base.Status
 import eu.pcosta.ethereumwallet.ui.base.viewBinding
-import eu.pcosta.ethereumwallet.ui.favorites.confirmFavoriteDeletion
+import eu.pcosta.ethereumwallet.ui.balance.favorites.confirmFavoriteDeletion
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit

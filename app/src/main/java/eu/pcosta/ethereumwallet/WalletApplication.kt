@@ -33,7 +33,7 @@ val serviceModule = module {
 }
 
 val viewModelModule = module {
-    viewModel { BalanceViewModel(get(), get()) }
+    viewModel { BalanceViewModel(get(), get(), get()) }
     viewModel { SearchViewModel(get(), get(), get()) }
 }
 

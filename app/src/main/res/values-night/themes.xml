@@ -13,8 +13,12 @@
 
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?colorOnPrimary</item>
-        <item name="android:navigationBarColor">?colorOnPrimary</item>
+        <item name="android:navigationBarColor">@color/window_background_night</item>
         <item name="android:windowLightNavigationBar">false</item>
         <item name="android:windowLightStatusBar">false</item>
+
+        <!-- Window background -->
+        <item name="android:windowBackground">@color/window_background_night</item>
+
     </style>
 </resources>

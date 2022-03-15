@@ -1,154 +1,220 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/app_name"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:gravity="bottom"
-        android:padding="24dp"
-        android:text="@string/app_name"
-        android:textColor="?android:textColorPrimary"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="196dp"
+        android:background="?colorOnPrimary"
+        android:fitsSystemWindows="true"
+        app:elevation="4dp">
 
-    <TextView
-        android:id="@+id/address_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:gravity="center_vertical"
-        android:text="@string/address"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:drawableStartCompat="@drawable/ic_home"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/app_name" />
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:title="@string/app_name"
+            app:toolbarId="@+id/toolbar">
 
-    <LinearLayout
-        android:id="@+id/address_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="?selectableItemBackground"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        app:layout_constraintStart_toStartOf="@id/address_title"
-        app:layout_constraintTop_toBottomOf="@id/address_title">
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                app:layout_collapseMode="pin" />
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <TextView
-            android:id="@+id/address_value"
+            android:id="@+id/address_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="0xde57844f758a0a6a1910a4787ab2f7121c8978c3" />
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/address"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:drawableStartCompat="@drawable/ic_home"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/address_copy"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+        <LinearLayout
+            android:id="@+id/address_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintStart_toStartOf="@id/address_title"
+            app:layout_constraintTop_toBottomOf="@id/address_title">
+
+            <TextView
+                android:id="@+id/address_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="0xde57844f758a0a6a1910a4787ab2f7121c8978c3" />
+
+            <ImageView
+                android:id="@+id/address_copy"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/ic_copy" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/balance_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/eth_balance"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:drawableStartCompat="@drawable/ic_account_balance_wallet"
+            app:layout_constraintStart_toStartOf="@id/address_container"
+            app:layout_constraintTop_toBottomOf="@id/address_container" />
+
+        <ProgressBar
+            android:id="@+id/progress_indicator"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginStart="8dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/ic_copy" />
+            app:layout_constraintBottom_toBottomOf="@+id/balance_title"
+            app:layout_constraintStart_toEndOf="@+id/balance_title"
+            app:layout_constraintTop_toTopOf="@+id/balance_title" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/balance_amount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:ellipsize="marquee"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
+            android:textSize="22sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/balance_title"
+            app:layout_constraintTop_toBottomOf="@+id/balance_title"
+            tools:text="2123131.52312312312321 ETH"
+            tools:visibility="visible" />
 
-    <TextView
-        android:id="@+id/balance_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:gravity="center_vertical"
-        android:text="@string/eth_balance"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:drawableStartCompat="@drawable/ic_account_balance_wallet"
-        app:layout_constraintStart_toStartOf="@id/address_container"
-        app:layout_constraintTop_toBottomOf="@id/address_container" />
+        <TextView
+            android:id="@+id/balance_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="22sp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/balance_amount"
+            app:layout_constraintTop_toBottomOf="@id/balance_amount"
+            tools:text="$960"
+            tools:visibility="visible" />
 
-    <ProgressBar
-        android:id="@+id/progress_indicator"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/balance_title"
-        app:layout_constraintStart_toEndOf="@+id/balance_title"
-        app:layout_constraintTop_toTopOf="@+id/balance_title" />
+        <TextView
+            android:id="@+id/balance_last_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/balance_value"
+            app:layout_constraintTop_toBottomOf="@id/balance_value"
+            tools:text="@string/last_update_placeholder"
+            tools:visibility="visible" />
 
-    <TextView
-        android:id="@+id/balance_amount"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:ellipsize="marquee"
-        android:fontFamily="sans-serif-medium"
-        android:maxLines="1"
-        android:textSize="22sp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/balance_title"
-        app:layout_constraintTop_toBottomOf="@+id/balance_title"
-        tools:text="2123131.52312312312321 ETH"
-        tools:visibility="visible" />
+        <TextView
+            android:id="@+id/balance_error_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/red"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/balance_last_update"
+            app:layout_constraintTop_toBottomOf="@id/balance_last_update"
+            tools:text="@string/error_generic_message"
+            tools:visibility="visible" />
 
-    <TextView
-        android:id="@+id/balance_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:fontFamily="sans-serif-medium"
-        android:textSize="22sp"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="@id/balance_amount"
-        app:layout_constraintTop_toBottomOf="@id/balance_amount"
-        tools:text="$960"
-        tools:visibility="visible" />
+        <TextView
+            android:id="@+id/favorites_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/favorites"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:drawableStartCompat="@drawable/ic_star"
+            app:layout_constraintStart_toStartOf="@id/balance_title"
+            app:layout_constraintTop_toBottomOf="@id/balance_error_update" />
 
-    <TextView
-        android:id="@+id/balance_last_update"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textSize="12sp"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="@id/balance_value"
-        app:layout_constraintTop_toBottomOf="@id/balance_value"
-        tools:text="@string/last_update_placeholder"
-        tools:visibility="visible" />
+        <TextView
+            android:id="@+id/favorites_empty_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/red"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/favorites_title"
+            app:layout_constraintTop_toBottomOf="@id/favorites_title"
+            tools:text="@string/favorites_empty_error"
+            tools:visibility="visible" />
 
-    <TextView
-        android:id="@+id/balance_error_update"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="@color/red"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="@id/balance_last_update"
-        app:layout_constraintTop_toBottomOf="@id/balance_last_update"
-        tools:text="@string/error_generic_message"
-        tools:visibility="visible" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/favorites_recycler_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:clipToPadding="false"
+            android:paddingBottom="80dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/favorites_title"
+            tools:itemCount="5"
+            tools:listitem="@layout/favorite_item"
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/tokens_search_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:text="@string/tokens_search"
         android:textColor="@color/white"
         app:icon="@drawable/ic_search"
-        app:iconTint="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:iconTint="@color/white" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
