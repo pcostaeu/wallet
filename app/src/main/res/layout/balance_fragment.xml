@@ -130,7 +130,7 @@
             android:fontFamily="sans-serif-medium"
             android:textSize="22sp"
             android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@id/balance_amount"
+            app:layout_constraintStart_toStartOf="@id/balance_title"
             app:layout_constraintTop_toBottomOf="@id/balance_amount"
             tools:text="$960"
             tools:visibility="visible" />
@@ -142,7 +142,7 @@
             android:layout_marginTop="4dp"
             android:textSize="12sp"
             android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@id/balance_value"
+            app:layout_constraintStart_toStartOf="@id/balance_title"
             app:layout_constraintTop_toBottomOf="@id/balance_value"
             tools:text="@string/last_update_placeholder"
             tools:visibility="visible" />
@@ -156,7 +156,7 @@
             android:textSize="12sp"
             android:textStyle="bold"
             android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@id/balance_last_update"
+            app:layout_constraintStart_toStartOf="@id/balance_title"
             app:layout_constraintTop_toBottomOf="@id/balance_last_update"
             tools:text="@string/error_generic_message"
             tools:visibility="visible" />
