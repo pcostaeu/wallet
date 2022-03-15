@@ -15,6 +15,7 @@ import eu.pcosta.ethereumwallet.domain.models.TokenBalance
 import eu.pcosta.ethereumwallet.ui.base.BaseFragment
 import eu.pcosta.ethereumwallet.ui.base.Status
 import eu.pcosta.ethereumwallet.ui.base.viewBinding
+import eu.pcosta.ethereumwallet.ui.favorites.confirmFavoriteDeletion
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
@@ -89,7 +90,9 @@ class SearchFragment : BaseFragment(R.layout.search_fragment) {
 
     private fun addRemoveFavorite(token: TokenBalance, favorite: Favorite?) {
         favorite?.let {
-            searchViewModel.removeFavorite(it)
+            requireContext().confirmFavoriteDeletion(it) {
+                searchViewModel.removeFavorite(it)
+            }
         } ?: searchViewModel.addFavorite(token)
     }
 
