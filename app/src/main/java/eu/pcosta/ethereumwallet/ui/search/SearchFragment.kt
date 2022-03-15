@@ -2,6 +2,7 @@ package eu.pcosta.ethereumwallet.ui.search
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.navigation.fragment.findNavController
@@ -29,13 +30,19 @@ class SearchFragment : BaseFragment(R.layout.search_fragment) {
     private val searchViewModel: SearchViewModel by viewModel()
     private val binding by viewBinding(SearchFragmentBinding::bind)
 
+    private val imm by lazy {
+        (requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
             NavigationUI.setupWithNavController(toolbar, findNavController())
 
-            val adapter = TokenAdapter()
+            val adapter = TokenAdapter { token, isFavorite ->
+                Log.d("TokenAdapter", "$token, $isFavorite")
+            }
 
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
             recyclerView.setHasFixedSize(true)
@@ -93,17 +100,13 @@ class SearchFragment : BaseFragment(R.layout.search_fragment) {
 
     private fun View.showKeyboard() {
         if (requestFocus()) {
-            (requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).apply {
-                showSoftInput(this@showKeyboard, InputMethodManager.SHOW_IMPLICIT)
-            }
+            imm.showSoftInput(this@showKeyboard, InputMethodManager.SHOW_IMPLICIT)
         }
     }
 
     private fun View.hideKeyboard() {
         clearFocus()
-        (requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).apply {
-            hideSoftInputFromWindow(binding.searchView.windowToken, 0)
-        }
+        imm.hideSoftInputFromWindow(binding.searchView.windowToken, 0)
     }
 
     private fun updateAnimation(isVisible: Boolean, animation: EmptyStateAnimation) {
