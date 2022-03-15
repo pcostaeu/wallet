@@ -180,13 +180,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:text="@string/favorites_empty_error"
             android:textColor="@color/red"
             android:textSize="12sp"
             android:textStyle="bold"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="@id/favorites_title"
             app:layout_constraintTop_toBottomOf="@id/favorites_title"
-            tools:text="@string/favorites_empty_error"
             tools:visibility="visible" />
 
         <androidx.recyclerview.widget.RecyclerView
