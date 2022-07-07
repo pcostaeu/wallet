@@ -13,7 +13,7 @@
     android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/token_name"
+        android:id="@+id/favorite_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -22,20 +22,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Tether USD:" />
-
-    <TextView
-        android:id="@+id/token_balance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@id/token_name"
-        app:layout_constraintTop_toTopOf="@id/token_name"
-        tools:text="400.0324" />
+        tools:text="Tether USD (USDT)" />
 
     <FrameLayout
-        android:id="@+id/token_favorite_btn"
+        android:id="@+id/favorite_delete_btn"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:foreground="?selectableItemBackground"
@@ -44,11 +34,10 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/token_favorite_img"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_star_border" />
+            android:src="@drawable/ic_delete" />
 
     </FrameLayout>
 

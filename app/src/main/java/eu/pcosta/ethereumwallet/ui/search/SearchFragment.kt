@@ -10,9 +10,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding4.widget.queryTextChanges
 import eu.pcosta.ethereumwallet.R
 import eu.pcosta.ethereumwallet.databinding.SearchFragmentBinding
+import eu.pcosta.ethereumwallet.domain.models.Favorite
+import eu.pcosta.ethereumwallet.domain.models.TokenBalance
 import eu.pcosta.ethereumwallet.ui.base.BaseFragment
 import eu.pcosta.ethereumwallet.ui.base.Status
 import eu.pcosta.ethereumwallet.ui.base.viewBinding
+import eu.pcosta.ethereumwallet.ui.balance.favorites.confirmFavoriteDeletion
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
@@ -29,13 +32,17 @@ class SearchFragment : BaseFragment(R.layout.search_fragment) {
     private val searchViewModel: SearchViewModel by viewModel()
     private val binding by viewBinding(SearchFragmentBinding::bind)
 
+    private val imm by lazy {
+        (requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
             NavigationUI.setupWithNavController(toolbar, findNavController())
 
-            val adapter = TokenAdapter()
+            val adapter = TokenAdapter(::addRemoveFavorite)
 
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
             recyclerView.setHasFixedSize(true)
@@ -81,6 +88,14 @@ class SearchFragment : BaseFragment(R.layout.search_fragment) {
         }
     }
 
+    private fun addRemoveFavorite(token: TokenBalance, favorite: Favorite?) {
+        favorite?.let {
+            requireContext().confirmFavoriteDeletion(it) {
+                searchViewModel.removeFavorite(it)
+            }
+        } ?: searchViewModel.addFavorite(token)
+    }
+
     override fun onResume() {
         super.onResume()
         binding.searchView.showKeyboard()
@@ -93,17 +108,13 @@ class SearchFragment : BaseFragment(R.layout.search_fragment) {
 
     private fun View.showKeyboard() {
         if (requestFocus()) {
-            (requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).apply {
-                showSoftInput(this@showKeyboard, InputMethodManager.SHOW_IMPLICIT)
-            }
+            imm.showSoftInput(this@showKeyboard, InputMethodManager.SHOW_IMPLICIT)
         }
     }
 
     private fun View.hideKeyboard() {
         clearFocus()
-        (requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).apply {
-            hideSoftInputFromWindow(binding.searchView.windowToken, 0)
-        }
+        imm.hideSoftInputFromWindow(binding.searchView.windowToken, 0)
     }
 
     private fun updateAnimation(isVisible: Boolean, animation: EmptyStateAnimation) {

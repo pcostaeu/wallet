@@ -2,9 +2,11 @@ package eu.pcosta.ethereumwallet.ui.balance
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
-import eu.pcosta.ethereumwallet.domain.models.EtherBalance
-import eu.pcosta.ethereumwallet.domain.ConnectivityService
 import eu.pcosta.ethereumwallet.domain.BalanceService
+import eu.pcosta.ethereumwallet.domain.ConnectivityService
+import eu.pcosta.ethereumwallet.domain.FavoritesService
+import eu.pcosta.ethereumwallet.domain.models.EtherBalance
+import eu.pcosta.ethereumwallet.domain.models.Favorite
 import eu.pcosta.ethereumwallet.ui.base.BaseViewModel
 import eu.pcosta.ethereumwallet.ui.base.Response
 import eu.pcosta.ethereumwallet.ui.base.Status
@@ -15,7 +17,8 @@ import java.util.*
 
 class BalanceViewModel(
     private val connectivityService: ConnectivityService,
-    private val balanceService: BalanceService
+    private val balanceService: BalanceService,
+    private val favoritesService: FavoritesService
 ) : BaseViewModel() {
 
     fun observeBalance(): LiveData<Response<EtherBalance>> {
@@ -39,5 +42,25 @@ class BalanceViewModel(
             .subscribeOn(Schedulers.io())
 
         return LiveDataReactiveStreams.fromPublisher(stream)
+    }
+
+    fun observeFavorites(): LiveData<Response<List<Favorite>>> {
+        val stream = favoritesService.observeFavorites()
+            .map {
+                Response(
+                    status = Status.OK,
+                    data = it.sortedBy { it.name }
+                )
+            }
+            .startWithItem(Response(status = Status.LOADING))
+            .subscribeOn(Schedulers.io())
+
+        return LiveDataReactiveStreams.fromPublisher(stream)
+    }
+
+    fun deleteFavorite(favorite: Favorite) {
+        favoritesService.removeFavorite(favorite)
+            .subscribeOn(Schedulers.io())
+            .subscribe()
     }
 }

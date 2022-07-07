@@ -8,6 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="window_background_day">#F5F5F5</color>
+    <color name="window_background_night">#191919</color>
+
     <color name="green">#4CAF50</color>
     <color name="red">#E91E63</color>
 </resources>

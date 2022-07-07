@@ -3,11 +3,9 @@ package eu.pcosta.ethereumwallet
 import android.app.Application
 import android.util.Log
 import androidx.room.Room
+import eu.pcosta.ethereumwallet.database.FavoritesDatabase
 import eu.pcosta.ethereumwallet.database.TokensDatabase
-import eu.pcosta.ethereumwallet.domain.BalanceService
-import eu.pcosta.ethereumwallet.domain.BalanceServiceImpl
-import eu.pcosta.ethereumwallet.domain.ConnectivityService
-import eu.pcosta.ethereumwallet.domain.ConnectivityServiceImpl
+import eu.pcosta.ethereumwallet.domain.*
 import eu.pcosta.ethereumwallet.repository.*
 import eu.pcosta.ethereumwallet.ui.balance.BalanceViewModel
 import eu.pcosta.ethereumwallet.ui.search.SearchViewModel
@@ -26,15 +24,17 @@ val repositoryModule = module {
 
 val serviceModule = module {
     single<ConnectivityService> { ConnectivityServiceImpl(get()) }
-    single<BalanceService> {
-        val dao = Room.databaseBuilder(get(), TokensDatabase::class.java, "tokens.db").build().dao
-        BalanceServiceImpl(get(), get(), dao, get(), get())
-    }
+
+    factory { Room.databaseBuilder(get(), TokensDatabase::class.java, "tokens.db").build().dao }
+    factory { Room.databaseBuilder(get(), FavoritesDatabase::class.java, "favorites.db").build().dao }
+
+    single<BalanceService> { BalanceServiceImpl(get(), get(), get(), get(), get()) }
+    single<FavoritesService> { FavoritesServiceImpl(get()) }
 }
 
 val viewModelModule = module {
-    viewModel { BalanceViewModel(get(), get()) }
-    viewModel { SearchViewModel(get(), get()) }
+    viewModel { BalanceViewModel(get(), get(), get()) }
+    viewModel { SearchViewModel(get(), get(), get()) }
 }
 
 /**
@@ -55,7 +55,7 @@ class WalletApplication : Application() {
 
         // Logging errors for streams that already have been disposed, aka undeliverable exceptions
         RxJavaPlugins.setErrorHandler {
-            Log.d("RxJavaError", it.message ?: "empty")
+            Log.e("RxJavaError", it.stackTraceToString())
         }
     }
 }

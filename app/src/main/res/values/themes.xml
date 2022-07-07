@@ -14,9 +14,12 @@
 
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?colorOnPrimary</item>
-        <item name="android:navigationBarColor">?colorOnPrimary</item>
+        <item name="android:navigationBarColor">@color/window_background_day</item>
         <item name="android:windowLightNavigationBar">true</item>
         <item name="android:windowLightStatusBar">true</item>
+
+        <!-- Window background -->
+        <item name="android:windowBackground">@color/window_background_day</item>
 
     </style>
 
